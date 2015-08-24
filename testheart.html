@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	.heart{
+		width: 48px;
+		height: 48px;
+		margin-left: 10px;
+		margin-top: 10px;
+	}
+</style>
+</head>
+<body>
+
+	<img class="heart" src="img/gray.png">
+	<span>10</span>
+
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".heart").bind("click",function(){
+		var thisRef = $(this);
+		var likedNumber = $(this).parent().find("span").text(); //should be got from database
+		var ifLiked = false;  //should be got from database
+		var size = 1;
+      	var opacity = 0.5;
+
+      	function spark(w,f){
+        thisRef.css("-webkit-transform","scale("+w+","+w+")");
+        thisRef.css("-moz-transform","scale("+w+","+w+")");
+        thisRef.css("-transform","scale("+w+","+w+")");
+        thisRef.css("filter","alpha(opacity="+f+")");
+        thisRef.css("-moz-opacity",f);
+        thisRef.css("-khtml-opacity",f);
+        thisRef.css("opacity",f);
+      }
+
+      if(ifLiked == false){
+
+      	likedNumber++;
+      	thisRef.attr("src","img/red.png");
+      	thisRef.parent().find("span").text(likedNumber);
+      	//and post to the database
+
+      	var timerB = setInterval(function(){
+      		
+      		spark(size,opacity);
+      		
+      		size = size+0.05;
+      		opacity = opacity+0.05;
+      		
+      		if(size>1.5){
+      		
+      			clearInterval(timerB);
+      		
+      			var timerS = setInterval(function(){
+      		
+      				spark(size);
+      		
+      				size = size-0.05;
+      		
+      				if(size<=1){     		
+      					clearInterval(timerS);
+      				}
+      			},30)
+      		}
+      	},30);
+      	ifLiked = false;
+
+      }else{
+
+      	likedNumber--;
+      	thisRef.attr("src","img/gray.png");
+        thisRef.parent().find("span").text(likedNumber);
+        ifLiked = true;
+        //and post to the database
+      }
+	});
+});
+</script>
+</body>
+</html>
